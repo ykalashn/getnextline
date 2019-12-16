@@ -6,13 +6,32 @@
 /*   By: ykalashn <ykalashn@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 12:33:55 by ykalashn          #+#    #+#             */
-/*   Updated: 2019/12/16 14:30:43 by ykalashn         ###   ########.fr       */
+/*   Updated: 2019/12/16 14:59:44 by ykalashn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	ft_new_line(char *rubbish, char **line)
+static char		*ft_strndup(const char *s1, size_t n)
+{
+	char	*ptr;
+	size_t	i;
+
+	if (!(ptr = (char*)malloc(sizeof(*ptr) * ft_strlen(s1) + 1)))
+		return (NULL);
+	i = 0;
+	if (!ptr)
+		return (NULL);
+	while (s1[i] && i < n)
+	{
+		ptr[i] = s1[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+static int		ft_new_line(char *rubbish, char **line)
 {
 	int len;
 
@@ -28,14 +47,13 @@ static int	ft_new_line(char *rubbish, char **line)
 	return (1);
 }
 
-int			get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	static char	*rubbish[CEILING];
 	char		buf[BUFF_SIZE + 1];
 	char		*tmp;
 	int			ret;
 
-	i = 0;
 	ret = 1;
 	if (fd < 0 || line == NULL)
 		return (-1);
@@ -48,7 +66,7 @@ int			get_next_line(const int fd, char **line)
 		if (!(rubbish[fd] = ft_strjoin(rubbish[fd], buf)))
 			return (-1);
 		ft_strdel(&tmp);
-		if (ft_strchr('\n'))
+		if (ft_strchr(buf, '\n'))
 			break ;
 	}
 	if (ret < 0)
